@@ -7,17 +7,16 @@ from torch.nn.utils import spectral_norm as SN
 
 
 class Discriminator(nn.Module):
-    def __init__(self, channel=512, out_class=1, is_dis=True):
+    def __init__(self, channel=512, out_class=1):
         super(Discriminator, self).__init__()
-        self.is_dis = is_dis
         self.channel = channel
         
-        self.conv1 = SN(nn.Conv3d(4, channel//8, kernel_size=4, stride=2, padding=1))
+        self.conv1 = SN(nn.Conv3d(5, channel//8, kernel_size=4, stride=2, padding=1))
         self.conv2 = SN(nn.Conv3d(channel//8, channel//4, kernel_size=4, stride=2, padding=1))
         self.conv3 = SN(nn.Conv3d(channel//4, channel//2, kernel_size=4, stride=2, padding=1))
         self.conv4 = SN(nn.Conv3d(channel//2, channel, kernel_size=4, stride=2, padding=1))
         self.conv5 = SN(nn.Conv3d(channel, out_class, kernel_size=4, stride=1, padding=0))
-        self.fc = nn.Linear(5*5*5, 1)
+        self.fc = nn.Linear(5*5*5, 1)  # this was added by Alikhan
         
     def forward(self, x, _return_activations=False):
         h1 = F.leaky_relu(self.conv1(x), negative_slope=0.2)  # 128x128x128 -> 64x64x64
@@ -25,7 +24,7 @@ class Discriminator(nn.Module):
         h3 = F.leaky_relu(self.conv3(h2), negative_slope=0.2)  # 32x32x32 -> 16x16x16
         h4 = F.leaky_relu(self.conv4(h3), negative_slope=0.2)  # 16x16x16 -> 8x8x8
         h5 = self.conv5(h4)  # 8x8x8 -> 5x5x5
-        h6 = self.fc(h5.view(h5.size()[0], -1))  # 5x5x5 -> 1
+        h6 = self.fc(h5.view(h5.size()[0], -1))  # 5x5x5 -> 1  added this fully connected layer to make the output 1
         
         return h6
 
@@ -33,7 +32,6 @@ class Discriminator(nn.Module):
 class Code_Discriminator(nn.Module):
     def __init__(self, code_size=100, num_units=750):
         super(Code_Discriminator, self).__init__()
-        n_class = 1
         
         self.l1 = nn.Sequential(SN(nn.Linear(code_size, num_units)),
                                 nn.LeakyReLU(0.2, inplace=True))
@@ -101,7 +99,7 @@ class Generator(nn.Module):
         self.tp_conv4 = nn.Conv3d(_c*2, _c, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn4 = nn.InstanceNorm3d(_c)
         
-        self.tp_conv5 = nn.Conv3d(_c, 4, kernel_size=3, stride=1, padding=1, bias=False)
+        self.tp_conv5 = nn.Conv3d(_c, 5, kernel_size=3, stride=1, padding=1, bias=False)
         
     def forward(self, noise):
 
