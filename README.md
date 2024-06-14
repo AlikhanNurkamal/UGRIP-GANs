@@ -1,4 +1,6 @@
 # UGRIP-GANs
+I would like to express my gratitude to my mentors Sarim Hashmi, Sanoojan Baliah, and Fadillah Adamsyah Maani, who were helping and supporting us greatly throughout the whole internship program.
+
 ## Motivation
 Under supervision of our PI Dr. Mohammad Yaqub, our team is taking part in BraTS 2024 competition (BraTS stands for Brain Tumor Segmentation). However, since the datasets in this competition are quite small, it is unreasonable to use large models (i.e. ViTs or Mambas) as they are prone to overfitting when training on small datasets. In order to overcome this problem it was decided to generate synthetic data (both brain MRI images and their tumor segmentation masks) using GANs and Diffusion Models. I was working on 3D GANs and my main goal was to generate 3D brain MRI images and their ground truth tumor masks.
 
