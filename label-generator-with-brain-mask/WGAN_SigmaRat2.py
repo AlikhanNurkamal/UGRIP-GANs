@@ -11,7 +11,7 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         self.channel = channel
         
-        self.conv1 = SN(nn.Conv3d(5, channel//8, kernel_size=4, stride=2, padding=1))
+        self.conv1 = SN(nn.Conv3d(4, channel//8, kernel_size=4, stride=2, padding=1))
         self.conv2 = SN(nn.Conv3d(channel//8, channel//4, kernel_size=4, stride=2, padding=1))
         self.conv3 = SN(nn.Conv3d(channel//4, channel//2, kernel_size=4, stride=2, padding=1))
         self.conv4 = SN(nn.Conv3d(channel//2, channel, kernel_size=4, stride=2, padding=1))
@@ -99,7 +99,7 @@ class Generator(nn.Module):
         self.tp_conv4 = nn.Conv3d(_c*2, _c, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn4 = nn.InstanceNorm3d(_c)
         
-        self.tp_conv5 = nn.Conv3d(_c, 5, kernel_size=3, stride=1, padding=1, bias=False)
+        self.tp_conv5 = nn.Conv3d(_c, 4, kernel_size=3, stride=1, padding=1, bias=False)
         
     def forward(self, noise):
 
