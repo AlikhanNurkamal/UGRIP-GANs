@@ -84,10 +84,10 @@ class LabelsDataset(Dataset):
         
         reshaped_image = np.max(patch, axis=0)
         reshaped_mask = np.zeros((4, 128, 128, 128))
-        reshaped_mask[0] = label[0]
-        reshaped_mask[1] = label[1]
-        reshaped_mask[2] = label[2]
-        reshaped_mask[3] = (reshaped_image > 0).astype(int)
+        reshaped_mask[0] = (reshaped_image > 0).astype(int)
+        reshaped_mask[1] = label[0]
+        reshaped_mask[2] = label[1]
+        reshaped_mask[3] = label[2]
         
         if self.transforms is not None:
             label = self.transforms(reshaped_mask)
