@@ -37,7 +37,7 @@ DEVICE = torch.device('cuda:0')
 def nets():
     G = Generator(noise=LATENT_DIM).to(DEVICE)
     CD = Code_Discriminator(code_size=LATENT_DIM, num_units=4096).to(DEVICE)
-    D = Discriminator(is_dis=True).to(DEVICE)
+    D = Discriminator().to(DEVICE)
     
     E = Encoder(out_class=LATENT_DIM, is_dis=False).to(DEVICE)
     
