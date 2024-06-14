@@ -6,17 +6,13 @@ from torch import optim
 
 from torch.nn import functional as F
 from torch.nn.utils import spectral_norm as SN
-#***********************************************
-#Encoder and Discriminator has same architecture (not anymore)
-#***********************************************
 
 
 class Discriminator(nn.Module):
-    def __init__(self, channel=512, out_class=1, is_dis=True):
+    def __init__(self, channel=512, out_class=1):
         super(Discriminator, self).__init__()
-        self.is_dis=is_dis
         self.channel = channel
-        n_class = out_class 
+        n_class = out_class
         
         self.conv1 = SN(nn.Conv3d(4, channel//8, kernel_size=4, stride=2, padding=1))
         self.conv2 = SN(nn.Conv3d(channel//8, channel//4, kernel_size=4, stride=2, padding=1))
@@ -128,8 +124,6 @@ class Generator(nn.Module):
         h = nn.functional.interpolate(h,scale_factor=2)
         h = self.tp_conv5(h)
 
-        # h = torch.tanh(h)
-        
         h = torch.softmax(h, dim=1)  # initially, there was a tanh activation
 
         return h
