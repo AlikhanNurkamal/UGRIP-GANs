@@ -143,8 +143,23 @@ def networks_params(D, Dtruth, CD, CDtruth, E, Etruth, G, Gtruth):
 
 
 def visualization(image, img_name, iteration):
-    image = torch.argmax(image, dim=1)  # get the max value along channel dimension
-    image = image[0].detach().cpu().to(torch.float32).numpy()
+    image = image.detach().cpu().numpy()
+    image = image[0]  # get the first image in the batch
+    
+    if img_name == "x_hat" or img_name == "x_rand":
+        # Thresholding the brain segmentation mask
+        image[0][image[0] > 0.5] = 1
+        image[0][image[0] <= 0.5] = 0
+        
+        # If there is no brain mask, then there cannot be any tumor mask
+        image[1:][image[0] == 0] = 0
+        
+        # Thresholding the tumor segmentation mask
+        image[1:][image[1:] > 0.3] = 1
+        image[1:][image[1:] <= 0.3] = 0
+    
+    # Sum all the channels
+    image = torch.sum(image, dim=0)
     img = nib.nifti1.Nifti1Image(image, affine=np.eye(4))
     nib.save(img, f"{SAVE_IMAGES_DIR}" + f"{img_name}_iter{iteration}.nii.gz")
 
