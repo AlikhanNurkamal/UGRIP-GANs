@@ -2,7 +2,7 @@ IMG_SHAPE = (128, 128, 128)
 
 #_______________________________________________Constants_______________________________________________
 DEBUG = True
-PATH_DATASET = "/home/alikhan.nurkamal/brats-project/large-dataset/"
+PATH_DATASET = ""
 
 # Neural net
 ARCHITECTURE = "arch2"
@@ -34,5 +34,5 @@ LATENT_DIM = 500
 # whether to save images and model checkpoints and their respective directories
 SAVE_IMAGES = True  # save images in .nii.gz format
 SAVE_MODELS = True
-SAVE_IMAGES_DIR = "/home/alikhan.nurkamal/brats-project/gans-for-brats/label-generator/images/"
-SAVE_MODELS_DIR = "/home/alikhan.nurkamal/brats-project/gans-for-brats/label-generator/checkpoints/"
+SAVE_IMAGES_DIR = ""
+SAVE_MODELS_DIR = ""
