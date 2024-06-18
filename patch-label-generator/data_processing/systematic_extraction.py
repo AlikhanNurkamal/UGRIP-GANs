@@ -7,20 +7,19 @@ import torchio as tio
 #########################################
 ############# Initializations ###########
 #########################################
-# to be used from config file
-image_size = [240, 240, 155]  # was [312, 384, 127]
+image_size = [240, 240, 155]
 patch_size = [128, 128, 128]
 transform = tio.CropOrPad(target_shape=patch_size, padding_mode='constant')
 num_patches = 20
 datasets = ['train']
-data_folder = '/home/alikhan.nurkamal/brats-project/large-dataset/'
-target_folder = '/home/alikhan.nurkamal/brats-project/large-dataset-patches/'
+data_folder = ''
+target_folder = ''
 str_patch_size = str(patch_size[0]) + 'x' + str(patch_size[1]) + 'x' \
                 + str(patch_size[2])
 save_folder = os.path.join(target_folder, str(num_patches) + '_ppp_'
                            + str_patch_size)
 
-image_dtype = 'int16'  # was float32
+image_dtype = 'int16'
 label_dtype = 'uint8'
 
 ########################################
@@ -36,11 +35,11 @@ offsets = []
 for i in range(len(image_size)):
     quotient = 0
     quotient, remainder = divmod(image_size[i], patch_size[i])
-    # print(quotient, remainder)
+    
     if remainder != 0:
         quotient += 1
     offset = quotient * patch_size[i] - image_size[i]
-    # print(quotient, offset, remainder)
+
     if remainder != 0 and offset != 1: 
         if (offset % remainder) == 0:
             offset = offset//3
@@ -49,7 +48,7 @@ for i in range(len(image_size)):
         elif (offset > (patch_size[i]//2)) and (offset < (image_size[i]//2)):
             offset = offset//2
     offsets.append((quotient, offset))
-# print(offsets)
+
 xn, sys_offset_x = offsets[0]
 yn, sys_offset_y = offsets[1]
 zn, sys_offset_z = offsets[2]
@@ -57,15 +56,18 @@ zn, sys_offset_z = offsets[2]
 # Extraction loop starts here
 for dataset in datasets:
     print('Extracting for ', dataset)
-    patient_folders = os.listdir(data_folder)  # was os.listdir(os.path.join(data_folder, dataset))
+    patient_folders = os.listdir(data_folder)
     for patient in sorted(patient_folders):
         num_extracted = 0
+        
         print('Patient: ', patient)
-        img_path = os.path.join(data_folder, patient, f'{patient}-all_modalities.nii.gz')  # was os.path.join(data_folder, dataset, patient, img_name)
-        label_path = os.path.join(data_folder, patient, f'{patient}-seg.nii.gz')  # was os.path.join(data_folder, dataset, patient, label_name)
+        img_path = os.path.join(data_folder, patient, f'{patient}-all_modalities.nii.gz')
+        label_path = os.path.join(data_folder, patient, f'{patient}-seg.nii.gz')
+        
         print('---> Loading image...')
         img_nif = nib.load(img_path)
         image = np.array(img_nif.get_fdata(), dtype=image_dtype)
+        
         print('---> Loading segmentation label...')
         seg_label_nif = nib.load(label_path)
         seg_label = np.array(seg_label_nif.get_fdata(), dtype=label_dtype)
@@ -93,6 +95,7 @@ for dataset in datasets:
                     label = seg_label[:, start_cx:stop_cx, start_cy:stop_cy,
                                       start_cz:stop_cz]
                     
+                    # Apply cropping or padding to the patch and label
                     patch = transform(patch)
                     label = transform(label)
                     
@@ -152,18 +155,17 @@ for dataset in datasets:
         min_x, min_y, min_z = 0, 0, 0
 
         # All voxel indices that is a tumour
-        inds = np.asarray(np.where(seg_label > 0))  # was np.asarray(np.where(seg_label == 1))
+        inds = np.asarray(np.where(seg_label > 0))
 
         random_inds = inds[:, np.random.choice(inds.shape[1],
                                                patches_to_be_extracted,
                                                replace=False)]
         
         for i in range(patches_to_be_extracted):
-            # get the coordinates of the random tumour around which the patch
-            # will be extracted
-            x = random_inds[1][i]  # was random_inds[0][i]
-            y = random_inds[2][i]  # was random_inds[1][i]
-            z = random_inds[3][i]  # was random_inds[2][i]
+            # get the coordinates of the random tumour around which the patch will be extracted
+            x = random_inds[1][i]
+            y = random_inds[2][i]
+            z = random_inds[3][i]
 
             random_img_patch = np.zeros(shape=([4] + patch_size), dtype=image_dtype)
             random_label_patch = np.zeros(shape=([1] + patch_size), dtype=label_dtype)

@@ -25,15 +25,6 @@ class GANDataset(Dataset):
             label = np.load(label_file)
             label_file.close()
             
-            ### THIS IS A TEMPORARY FIX FOR THE SHAPES OF THE LABELS
-            # I WILL REMOVE THIS CODE
-            # reshaped_mask = np.zeros(shape=(3, 128, 128, 128), dtype=np.uint8)
-            # reshaped_mask[0] = np.where((label == 2) | (label == 3), 1, 0)  # tumor core
-            # reshaped_mask[1] = np.where((label == 1) | (label == 2) | (label == 3), 1, 0)  # whole tumor
-            # reshaped_mask[2] = np.where(label == 2, 1, 0)  # enhancing tumor
-            # label = reshaped_mask
-            ###
-            
             data_np = np.vstack((patch_normalized, label))
             data = torch.from_numpy(data_np).to(dtype=torch.float32)
         else:

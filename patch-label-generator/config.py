@@ -7,7 +7,7 @@ list_config_names = ['Trial', 'seed', 'ngpu', 'image_size', 'nz',
                      'beta1', 'beta2', 'num_workers', 'k_size', 'ngf', 'ndf',
                      'max_grad_norm', 'noise_m', 'clip_param']
 
-trial_num = 3
+trial_num = 1
 continue_train = False  # if true, also update the continue train parameters
 seed = 42
 
@@ -39,11 +39,11 @@ ngpu = 1
 cuda_n = [0]
 
 # Root directory for dataset
-dataroot = "/home/alikhan.nurkamal/brats-project/large-dataset-patches/20_ppp_128x128x128/"
+dataroot = ""
 
-save_model = "/home/alikhan.nurkamal/brats-project/gans-for-brats/3DGAN_synthesis_of_3D_TOF_MRA_with_segmentation_labels/checkpoints/models/trial_" + str(trial_num) + "/"
-save_results = "/home/alikhan.nurkamal/brats-project/gans-for-brats/3DGAN_synthesis_of_3D_TOF_MRA_with_segmentation_labels/checkpoints/results/trial_" + str(trial_num) + "/"
-save_config = "/home/alikhan.nurkamal/brats-project/gans-for-brats/3DGAN_synthesis_of_3D_TOF_MRA_with_segmentation_labels/checkpoints/WGAN_GP_trials.csv"
+save_model = "./checkpoints/models/trial_" + str(trial_num) + "/"
+save_results = "./checkpoints/results/trial_" + str(trial_num) + "/"
+save_config = "./checkpoints/WGAN_GP_trials.csv"
 
 ####################################
 # ###### parameter settings ###### #
@@ -56,7 +56,7 @@ gp = True
 lambdaa = 10
 
 # Batch size during training
-batch_size = 3
+batch_size = 4
 
 # kernel sizes
 kd = 3
@@ -106,7 +106,7 @@ list_config = [trial_num, seed, ngpu, image_size, nz,
 epoch_num_to_continue = 20
 trial_num_to_continue = 2
 
-saved_model_path = "/home/alikhan.nurkamal/brats-project/gans-for-brats/3DGAN_synthesis_of_3D_TOF_MRA_with_segmentation_labels/checkpoints/models/trial_" + \
+saved_model_path = "./checkpoints/models/trial_" + \
                     str(trial_num_to_continue) + "/" \
                     + "epoch_" + str(epoch_num_to_continue) + ".pth"
 
@@ -122,10 +122,9 @@ gen_threshold = 0.2  # in the case of SN model it is 0.2, for others it is 0.3
 diff_priv = False
 
 
-load_model_path = "/home/alikhan.nurkamal/brats-project/gans-for-brats/3DGAN_synthesis_of_3D_TOF_MRA_with_segmentation_labels/checkpoints/models/trial_" + str(model_trial) \
+load_model_path = "./checkpoints/models/trial_" + str(model_trial) \
                   + "/" + "epoch_" + str(model_epoch) + ".pth"
-gen_path = "/home/alikhan.nurkamal/brats-project/gans-for-brats/3DGAN_synthesis_of_3D_TOF_MRA_with_segmentation_labels/checkpoints/generated_images/trial_" + str(model_trial) \
+gen_path = "./checkpoints/generated_images/trial_" + str(model_trial) \
            + "/" + "gen_images_epoch_" + str(model_epoch) \
             + "_threshold_" + str(gen_threshold) \
             + "_" + str(gen_batch) + "/train/for_segmentation/train/"
-# + "/train/" #
