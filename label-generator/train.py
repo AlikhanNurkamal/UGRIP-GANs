@@ -68,17 +68,10 @@ Lloss3 = list()
 MSELossL = list()
 Gd_LossL = list()
 
+
 # # Data Set Creator
 # ----
 # ### Using Monai Transformation
-# * Resize (64x64x64)
-# * Rotate (3º)
-# * Flip (x axis)
-# * Rand Scale Intensity (±0.1)
-# * Zoom (1.1)
-# * Gaussian Noise (0.01)
-# * Scale Intensity Norm (-1,1)
-# * Translate (4x4x0)
 def create_train_loader():
     train_transforms = Compose([RandFlip(prob=0.1, spatial_axis=0),
                                 RandZoom(prob=0.1, min_zoom=(1.0), max_zoom=(1.1), mode="nearest"),
@@ -94,8 +87,6 @@ train_loader = create_train_loader()
 # # Gradient Penalty and Gradient Difference Loss
 # ----
 #___________________________________________WGAN-GP gradient penalty___________________________________________
-
-#calc_gradient_penalty(model, real_data, generated_data)
 def calc_gradient_penalty(model, x, x_gen):
     assert x.size() == x_gen.size(), "real and sampled sizes do not match"
     alpha_size = tuple((len(x), *(1,)*(x.dim()-1)))
@@ -106,7 +97,7 @@ def calc_gradient_penalty(model, x, x_gen):
 
     def eps_norm(x):
         x = x.view(len(x), -1)
-        return (x*x+_EPS).sum(-1).sqrt()
+        return (x*x+EPS).sum(-1).sqrt()
     def bi_penalty(x):
         return (x-1)**2
 
