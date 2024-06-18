@@ -23,13 +23,14 @@ def load_modalities_and_merge(directory, example_id, list_modalities=["t2f", "t1
     return vol
 
 
-source_directory = "/home/alikhan.nurkamal/brats-project/large-dataset/"
+# Directory with original data (4 modalities of 240x240x155 shapes)
+source_directory = "./large-dataset/"
 example_ids = os.listdir(source_directory)
 
 print("Start merging modalities...")
-for idx, example_id in enumerate(example_ids):
+for idx, example_id in enumerate(example_ids, 1):
     image = load_modalities_and_merge(source_directory, example_id)
     nibabel.save(image, os.path.join(source_directory, example_id, f'{example_id}-all_modalities.nii.gz'))
     if idx % 100 == 0:
-        print(f"Processed {idx + 1} examples...")
+        print(f"Processed {idx} examples...")
 print("Finished merging modalities!")
