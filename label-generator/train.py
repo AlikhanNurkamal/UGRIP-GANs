@@ -26,6 +26,7 @@ from config import *
 
 DEVICE = torch.device("cuda")
 
+
 # # Networks 
 # ----
 # ### Nomenclature 
@@ -140,32 +141,12 @@ def networks_params(D, Dtruth, CD, CDtruth, E, Etruth, G, Gtruth):
     return (D, CD, E, G)
 
 
-# FIX THIS FUNCTION
-def visualization(image, reality, i):
-    image = torch.argmax(image, dim=1)
+def visualization(image, img_name, iteration):
+    image = torch.argmax(image, dim=1)  # argmax along the channels dimension
     image = image[0].detach().cpu().numpy()
     
-    fig, ax = plt.subplots(nrows=4, ncols=4, figsize=(15, 15))
-    for i in range(16):
-        ax[i // 4, i % 4].imshow(image[0, :, :, 24+i], cmap="jet")
-        ax[i // 4, i % 4].set_title(f"Depth {24+i}")
-        ax[i // 4, i % 4].axis("off")
-
-    fig.suptitle(f"{reality}", fontsize=16)
-    fig.tight_layout()
-    plt.savefig(f"/fsx/hyperpod-output-artifacts/AROA6GBMFKRI2VWQAUGYI:Alikhan.Nurkamal@mbzuai.ac.ae/label-generator/images_progress/{reality}_iter{i}.png")
-# def visualization(image, reality, i):
-#     image = torch.argmax(image, dim=1)
-#     image = image[0].detach().cpu().numpy()
-#     plt.imsave(f'/fsx/hyperpod-output-artifacts/AROA6GBMFKRI2VWQAUGYI:Alikhan.Nurkamal@mbzuai.ac.ae/label-generator/images_progress/{reality}_iter{i}.png', image[:, :, 32], cmap='jet')
-    # feat = np.squeeze((0.5*image[0]+0.5).data.cpu().numpy())
-    # feat = nib.Nifti1Image(feat, affine=np.eye(4))
-    # feat = feat.get_fdata()
-    # # plotting.plot_img(feat, title=reality)
-    # # plotting.show()
-    # plt.imsave(f'./saved_progress/{reality}_iter{i}.png', feat[:,:,32], cmap='gray')
-    # # print(torch.max(image[0]))
-    # # print(torch.min(image[0]))
+    img = nib.nifti1.Nifti1Image(image, affine=np.eye(4))
+    nib.save(img, f"{SAVE_IMAGES_DIR}" + f"{img_name}_iter{iteration}.nii.gz")
 
 
 def load_dict(start):
@@ -181,6 +162,7 @@ def load_dict(start):
     cd_optimizer.load_state_dict(checkpoints['cd_optimizer'])
     
     return (G, CD, D, E, g_optimizer, cd_optimizer, d_optimizer, e_optimizer)
+
 
 # Training
 # ----
