@@ -77,7 +77,7 @@ def create_train_loader():
                                 RandZoom(prob=0.1, min_zoom=(1.0), max_zoom=(1.1), mode="nearest"),
                                 ToTensor()])
     
-    train_ds = LabelsDataset(data_dir="/fsx/hyperpod-input-datasets/AROA6GBMFKRI2VWQAUGYI:Alikhan.Nurkamal@mbzuai.ac.ae/dataset/large-dataset/", transforms=train_transforms)
+    train_ds = LabelsDataset(data_dir="", transforms=train_transforms)
     train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True, drop_last=True, num_workers=WORKERS, pin_memory=torch.cuda.is_available())
     return train_loader
 
