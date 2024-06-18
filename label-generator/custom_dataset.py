@@ -8,10 +8,10 @@ from scipy.ndimage import find_objects
 
 class LabelsDataset(Dataset):
     def __init__(self, data_dir: str, crop_labels: bool = True, target_shape: tuple = (64, 64, 64), transforms = None):
-        """_summary_
+        """Dataset class for loading 3D tumor segmentation labels
 
         Args:
-            data_dir (str): directory containing the label files
+            data_dir (str): directory containing the label files.
             crop_labels (bool, optional): whether to crop 3d images to a specified target shape. Defaults to True.
             target_shape (tuple, optional): shape of the voxel that will be returned after cropping (and padding). Defaults to (64, 64, 64).
             transforms (Any, optional): transformations applied to the labels. Defaults to None.
@@ -69,8 +69,6 @@ class LabelsDataset(Dataset):
                         pad_sizes.append((pad_before, pad_after))
                     
                     label = np.pad(label, pad_sizes, mode="constant")
-        
-        label = np.expand_dims(label, 0)  # Add a channel dimension
         
         # Reshape the mask to have 4 channels
         reshaped_mask = np.zeros((4, 64, 64, 64))
